@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>treasurehunt</title>
+</head>
+<body>
+    <div class="game">
+        <h1 class="task">Знайди захований скарб</h1>
+        <img style="-webkit-user-drag: none;" src="map.jpg" id="map" alt="map" width="650px">
+        <p id="distance"></p>
+        <p id="count"></p>
+
+    </div>
+
+    <script>
+        function getRandomNum(size){
+            let num = Math.floor(Math.random() * size);
+            return num;
+        }
+        // Розраховує відстань від кліку (event) до скарбу (target)
+        function getDistance(event, target){
+            const diffX = event.offsetX - target.x;
+            const diffY = event.offsetY - target.y;
+            const dist = Math.sqrt((diffX * diffX) + (diffY * diffY));
+            return dist;
+        }
+
+        function getDistanceHint(distance){
+            if (distance < 10){
+                return "Пече!";
+            } else if (distance < 20){
+                return "Дуже гаряче";
+            } else if (distance < 40){
+                return "Гаряче";
+            } else if (distance < 80){
+                return "Тепло";
+            } else if (distance < 160){
+                return "Холодно";
+            } else if (distance < 20){
+                return "Дуже холодно";
+            } else {
+                return "Можна замерзнути!";
+            } 
+        }
+
+        const width = 450;
+        const height = 400;
+        let click = 0;
+        const maxMoves = 8;
+
+        const target = {
+            x: getRandomNum(width),
+            y: getRandomNum(height)
+        }
+
+        const mapElement = document.getElementById("map");
+        mapElement.addEventListener("click", (event) => {
+            click++;
+            const answer = getDistanceHint(getDistance(event, target));
+            document.getElementById('distance').innerHTML = `Результат: ${answer}`;
+            document.getElementById('count').innerHTML = `Кількість ходів: ${click}`
+            if (answer === 'Пече'){
+                alert('Молодець!!!')
+            }
+            if (click === maxMoves ){
+                alert('Ти програв!!!')
+            }
+        });
+    </script>
+</body>
+</html>
